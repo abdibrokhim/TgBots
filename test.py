@@ -56,7 +56,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-TELEGRAM_BOT_TOKEN = ''
+TELEGRAM_BOT_TOKEN = '5538417603:AAGny-20v6DK2bD77wPr5TJv8o1X48T5HZo'
 VIDEO_FILE_PATH = 'video/video.mp4'
 AUDIO_FILE_PATH = 'audio/audio.mp3'
 CHANNEL_LINK = 'https://t.me/prmngr'
@@ -219,7 +219,7 @@ async def menu_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = ReplyKeyboardMarkup(buttons, resize_keyboard=True)
 
     await update.message.reply_text(
-        "Quyidagi ko'rsatilgan menyudan o'zingizga kerakli bo'limni tanlang\n\nTo\'liq ma\'lumot olish uchun /doc bosing",
+        "Quyidagi ko'rsatilgan menyudan o'zingizga kerakli bo'limni tanlang\n\nTo\'liq ma\'lumot olish uchun /doc bosing\n\nReklama /ads, Botlar /bots",
         reply_markup=reply_markup)
 
     return MAIN
@@ -334,7 +334,7 @@ async def instagram_reel_handler(update: Update, context: ContextTypes.DEFAULT_T
 
 
 async def instagram_story_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Instagram story linkini yuboring",
+    await update.message.reply_text("Instagram story linkini/username yuboring",
                                     reply_markup=ReplyKeyboardMarkup([
                                         ["🔙️ Orqaga"]],
                                         resize_keyboard=True))
@@ -401,8 +401,7 @@ async def instagram_post_link_handler(update: Update, context: ContextTypes.DEFA
                 await update.message.reply_photo(photo=i)
         except Exception as e:
             print(e)
-            await update.message.reply_photo(photo=result['media'])
-            # await update.message.reply_text(text='Bu linkda hech narsa yo\'q')
+            await update.message.reply_photo(photo=result['media'], write_timeout=100)
     else:
         await update.message.reply_text(text='Linkingizni yuboring')
 
@@ -437,7 +436,7 @@ async def instagram_reel_link_handler(update: Update, context: ContextTypes.DEFA
             with open(VIDEO_FILE_PATH, 'wb') as f:
                 f.write(response.content)
 
-            await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'))
+            await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'), write_timeout=1000)
 
             os.remove(VIDEO_FILE_PATH)
         except Exception as e:
@@ -480,7 +479,7 @@ async def instagram_story_link_handler(update: Update, context: ContextTypes.DEF
                     with open(VIDEO_FILE_PATH, 'wb') as f:
                         f.write(response.content)
 
-                    await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'))
+                    await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'), write_timeout=1000)
 
                     os.remove(VIDEO_FILE_PATH)
         except Exception as e:
@@ -492,7 +491,7 @@ async def instagram_story_link_handler(update: Update, context: ContextTypes.DEF
                 with open(VIDEO_FILE_PATH, 'wb') as f:
                     f.write(response.content)
 
-                await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'))
+                await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'), write_timeout=1000)
 
                 os.remove(VIDEO_FILE_PATH)
     else:
@@ -530,7 +529,7 @@ async def facebook_reel_link_handler(update: Update, context: ContextTypes.DEFAU
             with open(VIDEO_FILE_PATH, 'wb') as f:
                 f.write(response.content)
 
-            await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'))
+            await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'), write_timeout=1000)
 
             os.remove(VIDEO_FILE_PATH)
         except Exception as e:
@@ -583,6 +582,7 @@ async def spotify_voice_msg_handler(update: Update, context: ContextTypes.DEFAUL
         await update.message.reply_audio(
             audio=open(FILE_PATH, 'rb'),
             title=title,
+            write_timeout=100,
         )
 
         os.remove(FILE_PATH)
@@ -604,24 +604,28 @@ async def tiktok_reel_link_handler(update: Update, context: ContextTypes.DEFAULT
         await _post_query(user.id, link)
 
         await update.message.reply_text(text='🔎 Izlanmoqda...')
-        url = 'https://tiktok-info.p.rapidapi.com/dl/'
-        querystring = {"link": link}
-        headers = {
-            "X-RapidAPI-Key": 'e0ffcd909emsh1d42846ceac4f36p1278e0jsn4a987af97a26',
-            "X-RapidAPI-Host": 'tiktok-info.p.rapidapi.com'
-        }
-        response = requests.request("GET", url, headers=headers, params=querystring)
-        time.sleep(1)
-        result = response.json()
+        url = "https://tiktok-video-no-watermark2.p.rapidapi.com/"
 
-        link = str(result['videoLinks']['download'])
+        querystring = {"url": link, 'hd': '0'}
+
+        headers = {
+            "X-RapidAPI-Key": "6a90d6d4efmsh32f9758380f3589p11e571jsn642878f330b1",
+            "X-RapidAPI-Host": "tiktok-video-no-watermark2.p.rapidapi.com"
+        }
+
+        response = requests.request("GET", url, headers=headers, params=querystring)
+
+        link = response.json()
+        # print(link)
+        link = link['data']['play']
+        print(link)
 
         try:
             response = requests.get(link)
             with open(VIDEO_FILE_PATH, 'wb') as f:
                 f.write(response.content)
 
-            await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'))
+            await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'), write_timeout=1000)
 
             os.remove(VIDEO_FILE_PATH)
         except Exception as e:
@@ -640,7 +644,7 @@ async def cancel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 if __name__ == "__main__":
-    app = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).read_timeout(7).get_updates_read_timeout(42).build()
+    app = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).read_timeout(100).get_updates_read_timeout(100).build()
     conv_handler = ConversationHandler(
         entry_points=[
             CommandHandler('start', start_handler),
