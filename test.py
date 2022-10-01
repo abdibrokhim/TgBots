@@ -62,15 +62,18 @@ AUDIO_FILE_PATH = 'audio/audio.mp3'
 CHANNEL_LINK = 'https://t.me/prmngr'
 CHANNEL_USERNAME = '@prmngr'
 
+
 _bots = """
 🤖 Bizning Botlar:
 
-    👉 @tiktokwatermark_removerBot
-    👉 @music_recognizerBot
-    👉 @musicfindmebot
-    👉 @anonyiobot
-    👉 @usellbuybot
-    👉 @thesaver_bot
+    🤖 @thesaver_bot
+    🤖 @insta_downder_bot
+    🤖 @usellbuybot
+    🤖 @musicfindmebot (yengi versiya)
+    🤖 @anonyiobot
+    🤖 @tiktoknowater_bot (yengi versiya)
+    🤖 @music_recognizerBot
+    🤖 @tiktokwatermark_removerBot
     
 📞 Contact: @abdibrokhim
 📞 Contact: @contactdevsbot
@@ -441,7 +444,7 @@ async def instagram_reel_link_handler(update: Update, context: ContextTypes.DEFA
             os.remove(VIDEO_FILE_PATH)
         except Exception as e:
             print(e)
-            await update.message.reply_text(text='Bu linkda hech narsa yo\'q')
+            await update.message.reply_text(text='❌ Bu linkda hech narsa yo\'q')
     else:
         await update.message.reply_text(text='Linkingizni yuboring')
 
@@ -534,7 +537,7 @@ async def facebook_reel_link_handler(update: Update, context: ContextTypes.DEFAU
             os.remove(VIDEO_FILE_PATH)
         except Exception as e:
             print(e)
-            await update.message.reply_text(text='Bu linkda hech narsa yo\'q')
+            await update.message.reply_text(text='❌ Bu linkda hech narsa yo\'q')
     else:
         await update.message.reply_text(text='Linkingizni yuboring')
 
@@ -547,7 +550,7 @@ async def youtube_reel_link_handler(update: Update, context: ContextTypes.DEFAUL
 
     await _post_query(user.id, link)
 
-    await update.message.reply_text(text='Xatolik yuz berdi!')
+    await update.message.reply_text(text='❌ Xatolik yuz berdi!')
 
     return YOUTUBE
 
@@ -630,7 +633,7 @@ async def tiktok_reel_link_handler(update: Update, context: ContextTypes.DEFAULT
             os.remove(VIDEO_FILE_PATH)
         except Exception as e:
             print(e)
-            await update.message.reply_text(text='Bu linkda hech narsa yo\'q')
+            await update.message.reply_text(text='❌ Bu linkda hech narsa yo\'q')
     else:
         await update.message.reply_text(text='Linkingizni yuboring')
 
@@ -641,6 +644,10 @@ async def cancel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Bekor qilindi")
     await update.message.reply_text("Qaytadan boshlash uchun\n/start ni bosing", reply_markup=ReplyKeyboardRemove())
     return ConversationHandler.END
+
+
+async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print(f"Update {update} caused error {context.error}")
 
 
 if __name__ == "__main__":
@@ -725,7 +732,11 @@ if __name__ == "__main__":
             CommandHandler('bots', bots_handler),
         ],
     )
+
     app.add_handler(conv_handler)
+
+    app.add_error_handler(error_handler)
+
 
     print("updated...")
     app.run_polling()

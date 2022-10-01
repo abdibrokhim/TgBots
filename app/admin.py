@@ -16,7 +16,6 @@ class TGClientQueryAdmin(admin.ModelAdmin):
     search_fields = ('tg_id', 'query',)
     ordering = ('-created_at',)
     date_hierarchy = 'created_at'
-    unique_together = ('tg_id', 'query',)
 
 
 admin.site.register(TGClient, TGClientAdmin)
