@@ -18,6 +18,8 @@ from telegram.ext import (
 
 )
 
+from telegram.constants import ParseMode
+
 import os
 import requests
 import logging
@@ -139,18 +141,24 @@ _commands = """
  FACEBOOK_REEL,
  YOUTUBE_REEL,
  SPOTIFY_MUSIC,
- TIKTOK_REEL) = range(13)
+ SPOTIFY_ARGS,
+ TIKTOK_REEL) = range(14)
 
 
-# Post TGClient to DB
+# Post TGClient
 @sync_to_async
 def _post_client(user):
     models.TGClient(
         tg_id=user.id,
     ).save()
 
+# Get TGClient list
+@sync_to_async
+def _get_clients():
+    return models.TGClient.objects.all().values()
 
-# Check TGClient in DB
+
+# Check TGClient
 @sync_to_async
 def _is_client(user):
     client = models.TGClient.objects.select_related().filter(tg_id=user.id)
@@ -160,7 +168,7 @@ def _is_client(user):
         return False
 
 
-# Post TGClient Query to DB
+# Post TGClient Query
 @sync_to_async
 def _post_query(user_id, query):
     models.TGClientQuery(
@@ -291,6 +299,9 @@ async def spotify_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             KeyboardButton(text="🟢 Ovozli xabar", ),
         ],
         [
+            KeyboardButton(text="🟢 Nomi/Ijrochisi", ),
+        ],
+        [
             KeyboardButton(text="🔙 Orqaga", ),
         ],
     ]
@@ -337,7 +348,7 @@ async def instagram_reel_handler(update: Update, context: ContextTypes.DEFAULT_T
 
 
 async def instagram_story_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Instagram story linkini/username yuboring",
+    await update.message.reply_text("Instagram story username/linkini yuboring",
                                     reply_markup=ReplyKeyboardMarkup([
                                         ["🔙️ Orqaga"]],
                                         resize_keyboard=True))
@@ -366,6 +377,14 @@ async def spotify_voice_handler(update: Update, context: ContextTypes.DEFAULT_TY
                                         ["🔙️ Orqaga"]],
                                         resize_keyboard=True))
     return SPOTIFY_MUSIC
+
+
+async def spotify_args_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Musiqa nomi yoki ijrochisi va maksimal natija yuboring\n\nMasalan: Yurak 5",
+                                    reply_markup=ReplyKeyboardMarkup([
+                                        ["🔙️ Orqaga"]],
+                                        resize_keyboard=True))
+    return SPOTIFY_ARGS
 
 
 async def tiktok_reel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -401,10 +420,10 @@ async def instagram_post_link_handler(update: Update, context: ContextTypes.DEFA
 
         try:
             for i in result['media']:
-                await update.message.reply_photo(photo=i)
+                await update.message.reply_photo(photo=i, caption='\n@thesaver_bot', write_timeout=100)
         except Exception as e:
             print(e)
-            await update.message.reply_photo(photo=result['media'], write_timeout=100)
+            await update.message.reply_photo(photo=result['media'], caption='\n@thesaver_bot', write_timeout=100)
     else:
         await update.message.reply_text(text='Linkingizni yuboring')
 
@@ -439,7 +458,8 @@ async def instagram_reel_link_handler(update: Update, context: ContextTypes.DEFA
             with open(VIDEO_FILE_PATH, 'wb') as f:
                 f.write(response.content)
 
-            await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'), write_timeout=1000)
+            await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'),
+                                             caption='\n@thesaver_bot', write_timeout=1000)
 
             os.remove(VIDEO_FILE_PATH)
         except Exception as e:
@@ -476,25 +496,27 @@ async def instagram_story_link_handler(update: Update, context: ContextTypes.DEF
         try:
             for i in result['stories']:
                 if i['type'] == 'Image':
-                    await update.message.reply_photo(photo=i['media'])
+                    await update.message.reply_photo(photo=i['media'], caption='\n@thesaver_bot', write_timeout=100)
                 if i['type'] == 'Video':
                     response = requests.get(i['media'])
                     with open(VIDEO_FILE_PATH, 'wb') as f:
                         f.write(response.content)
 
-                    await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'), write_timeout=1000)
+                    await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'),
+                                                     caption='\n@thesaver_bot', write_timeout=1000)
 
                     os.remove(VIDEO_FILE_PATH)
         except Exception as e:
             print(e)
             if result['type'] == 'Image':
-                await update.message.reply_photo(photo=result['media'])
+                await update.message.reply_photo(photo=result['media'], caption='\n@thesaver_bot', write_timeout=100)
             if result['type'] == 'Video':
                 response = requests.get(result['media'])
                 with open(VIDEO_FILE_PATH, 'wb') as f:
                     f.write(response.content)
 
-                await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'), write_timeout=1000)
+                await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'),
+                                                 caption='\n@thesaver_bot', write_timeout=1000)
 
                 os.remove(VIDEO_FILE_PATH)
     else:
@@ -532,7 +554,8 @@ async def facebook_reel_link_handler(update: Update, context: ContextTypes.DEFAU
             with open(VIDEO_FILE_PATH, 'wb') as f:
                 f.write(response.content)
 
-            await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'), write_timeout=1000)
+            await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'),
+                                             caption='\n@thesaver_bot', write_timeout=1000)
 
             os.remove(VIDEO_FILE_PATH)
         except Exception as e:
@@ -582,11 +605,8 @@ async def spotify_voice_msg_handler(update: Update, context: ContextTypes.DEFAUL
         FILE_PATH = f'audio/{title}.mp3'
 
         open(FILE_PATH, 'wb').write(requests.get(preview, allow_redirects=True).content)
-        await update.message.reply_audio(
-            audio=open(FILE_PATH, 'rb'),
-            title=title,
-            write_timeout=100,
-        )
+        await update.message.reply_audio(audio=open(FILE_PATH, 'rb'),
+                                         title=title, caption='\n@thesaver_bot', write_timeout=100,)
 
         os.remove(FILE_PATH)
     else:
@@ -594,6 +614,49 @@ async def spotify_voice_msg_handler(update: Update, context: ContextTypes.DEFAUL
         await update.message.reply_text(text=txt)
 
         os.remove(AUDIO_FILE_PATH)
+
+    return SPOTIFY
+
+
+async def spotify_args_msg_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.effective_user
+    args = update.message.text
+    args = args.split(' ')
+    query = ' '.join(args[:-1])
+    limit = args[-1]
+
+    print(args)
+
+    if args != '':
+        await _post_query(user.id, args)
+        # array = ""
+
+        await update.message.reply_text(text='🔎 Qidirilmoqda...')
+        url = "http://38.242.138.39/search_track/"
+
+        response = requests.request("POST", url, headers={'accept': 'application/json'}, json={'query': query, 'limit': limit})
+        result = response.json()
+
+        result_length = len(result['data']['tracks']['hits'])
+
+        for i in range(0, result_length):
+            subject = result['data']['tracks']['hits'][i]['share']['subject']
+            previewurl = result['data']['tracks']['hits'][i]['stores']['apple']['previewurl']
+
+            print(subject)
+            print(previewurl)
+
+            txt = f"""<b><a href="{previewurl}">{subject}</a></b>"""
+
+            # array += f"{txt}" + "\n\n"
+
+            try:
+                await update.message.reply_text(text=txt + '\n@thesaver_bot', write_timeout=100, parse_mode=ParseMode.HTML,)
+            except Exception as e:
+                print(e)
+                await update.message.reply_text(text="❌ Xatolik yuz berdi, Iltimos qayta urinib ko'ring")
+    else:
+        await update.message.reply_text(text='Musiqa nomi yoki ijrochisini va maksimal natijani yuboring\n\nMasalan: Yurak 5')
 
     return SPOTIFY
 
@@ -628,7 +691,8 @@ async def tiktok_reel_link_handler(update: Update, context: ContextTypes.DEFAULT
             with open(VIDEO_FILE_PATH, 'wb') as f:
                 f.write(response.content)
 
-            await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'), write_timeout=1000)
+            await update.message.reply_video(video=open(VIDEO_FILE_PATH, 'rb'),
+                                             caption='\n@thesaver_bot', write_timeout=1000)
 
             os.remove(VIDEO_FILE_PATH)
         except Exception as e:
@@ -648,6 +712,22 @@ async def cancel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     print(f"Update {update} caused error {context.error}")
+
+
+async def report_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    _cls = ""
+
+    cls = await _get_clients()
+
+    if cls:
+        for i in cls:
+            _cls += 'ID: ' + i['tg_id'] + '\nClient since: ' + str(i['created_at']) + '\n\n'
+
+        await update.message.reply_text(text=_cls)
+        await update.message.reply_text(text='Total: ' + str(len(cls)))
+
+    else:
+        await update.message.reply_text(text='Error')
 
 
 if __name__ == "__main__":
@@ -682,6 +762,7 @@ if __name__ == "__main__":
             ],
             SPOTIFY: [
                 MessageHandler(filters.Regex(".*Ovozli xabar$"), spotify_voice_handler),
+                MessageHandler(filters.Regex(".*Nomi/Ijrochisi$"), spotify_args_handler),
                 MessageHandler(filters.Regex(".*Orqaga$"), menu_handler),
             ],
             TIKTOK: [
@@ -709,8 +790,12 @@ if __name__ == "__main__":
                 MessageHandler(filters.TEXT & (~filters.COMMAND), youtube_reel_link_handler)
             ],
             SPOTIFY_MUSIC: [
-                MessageHandler(filters.Regex(".*Orqaga$"), spotify_handler),
+                MessageHandler(filters.Regex(".*Orqaga$"),  spotify_handler),
                 MessageHandler(filters.VOICE & (~filters.COMMAND), spotify_voice_msg_handler)
+            ],
+            SPOTIFY_ARGS: [
+                MessageHandler(filters.Regex(".*Orqaga$"), spotify_handler),
+                MessageHandler(filters.TEXT & (~filters.COMMAND), spotify_args_msg_handler)
             ],
             TIKTOK_REEL: [
                 MessageHandler(filters.Regex(".*Orqaga$"), tiktok_handler),
@@ -730,6 +815,7 @@ if __name__ == "__main__":
             CommandHandler('ads', ads_handler),
             CommandHandler('cmd', cmd_handler),
             CommandHandler('bots', bots_handler),
+            CommandHandler('r', report_handler),
         ],
     )
 
