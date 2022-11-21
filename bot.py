@@ -1,5 +1,5 @@
 # with Django
-# uzbek version
+# en version
 
 from telegram import (
     Update,
@@ -63,7 +63,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-TELEGRAM_BOT_TOKEN = '5538417603:AAGny-20v6DK2bD77wPr5TJv8o1X48T5HZo'  # test token
+TELEGRAM_BOT_TOKEN = '5538417603:AAGny-20v6DK2bD77wPr5TJv8o1X48T5HZo'  #test token
 VIDEO_FILE_PATH = 'video/video.mp4'
 AUDIO_FILE_PATH = 'audio/audio.mp3'
 CHANNEL_LINK = 'https://t.me/prmngr'
@@ -72,15 +72,16 @@ CHANNEL_USERNAME = '@prmngr'
 COMMUNITY_USERNAME = '@thesaver1chat'
 
 
-_bots = """
-🤖 Bizning Botlar:
 
-    🤖 @thesaver_bot (Uzbek versiya)
-    🤖 @insta_downder_bot 
+_bots = """
+🤖 Useful Bots:
+
+    🤖 @thesaver_bot (Uzbek version)
+    🤖 @insta_downder_bot
     🤖 @usellbuybot
-    🤖 @musicfindmebot (yengi versiya)
+    🤖 @musicfindmebot (new version)
     🤖 @anonyiobot
-    🤖 @tiktoknowater_bot (yengi versiya)
+    🤖 @tiktoknowater_bot (new version)
     🤖 @music_recognizerBot
     🤖 @tiktokwatermark_removerBot
     
@@ -96,67 +97,71 @@ _bots = """
 
     💳 Visa: 4023 0602 4638 1551
     🪙 Bitcoin: bc1qpylxaqwapk0tgdmpnnljj545z4lk2z9q5us6p6
+    
 """
 
 _ads = """
-🗣 Biz bilan bog\'lanish uchun:
+🗣 Contact us:
 
     🤖 @contactdevsbot
     👻 @abdibrokhim
     
-🗣 Bizning kanal: @prmngr
-🗣 Reklama: @prmngr
-🗣 Yangiliklar: @prmngr
+🗣 Join Channel: @prmngr
+🗣 Join Community: @thesaver1chat
 
-🗣 Xullas hamma narsa shetda, krurasila 💩: @prmngr
+🗣 Ads: @prmngr
+🗣 News/Updates: @prmngr
 
 ☕️ Buy me Coffee: 
 
     💳 Visa: 4023 0602 4638 1551
     🪙 Bitcoin: bc1qpylxaqwapk0tgdmpnnljj545z4lk2z9q5us6p6
+    
 """
 
 _about = """
-🌝 Bu bot orqali siz Instagram, Facebook, YouTube, Shazam, TikTok va boshqalarida video, audio, post, story, reel va boshqalarini yuklab olish imkoniyatiga ega bo'lasiz.
+🌝 You can download videos and audios from Instagram, Facebook, YouTube, Shazam and TikTok.
 
-🗣 "Command"lar xaqida to\'liq ma\'lumot olish uchun /cmd buyrug\'ini yuboring
+🗣 To get more information about bot, use /doc command.
 
-🗣 Taklif, murojat, reklama va xokazo, /ads buyrug\'ini yuboring
+🗣 To get more information about other useful bots, use /bots command.
 
-🗣 Barcha Botlarimiz haqida to\'liq ma\'lumot olish uchun, /bots buyrug\'ini yuboring
+🗣 To get more information about ads/news/updates, use /ads command.
 
-🗣 Kanalimizga a'zo bo'ling: @prmngr
+🗣 Join our channel: @prmngr
+🗣 Join our community: @thesaver1chat
 
 ☕️ Buy me Coffee: 
 
     💳 Visa: 4023 0602 4638 1551
     🪙 Bitcoin: bc1qpylxaqwapk0tgdmpnnljj545z4lk2z9q5us6p6
+    
 """
 
 _commands = """
-🤖 /start - Botni ishga tushirishh️ 
+🤖 /start - Start bot
 
-🤖 /menu - Bosh Menu
+🤖 /menu - Main menu
 
-🤖 /instagram - Instagram dan qidirish
+🤖 /instagram - Browse Instagram
 
-🤖 /facebook - Facebook dan qidirish
+🤖 /facebook - Browse Facebook
 
-🤖 /youtube - YouTube dan qidirish
+🤖 /youtube - Browse YouTube
 
-🤖 /shazam - Shazam dan qidirish
+🤖 /shazam - Browse Shazam
 
-🤖 /tiktok - TikTok dan qidirish
+🤖 /tiktok - Browse TikTok
 
-🤖 /doc - Bot haqida ma\'lumot
+🤖 /doc - Documentation
 
-🤖 /ads - Reklama va Takliflar
+🤖 /ads - Ads/News/Updates
 
-🤖 /bots - Bizning botlarimiz
+🤖 /bots - Useful Bots
 
-🤖 /cmd - Barcha buyruqlar
+🤖 /cmd - Commands
 
-🤖 /end - Botni to\'xtatish
+🤖 /end - End bot
 
 ☕️ Buy me Coffee: 
 
@@ -187,6 +192,7 @@ def _post_client(user):
     models.TGClient(
         tg_id=user.id,
     ).save()
+
 
 # Get TGClient list
 @sync_to_async
@@ -235,12 +241,12 @@ async def start_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not await _is_client(user):
         await _post_client(user)
 
-    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton('↗️ Kanalga go', url=CHANNEL_LINK)],
+    reply_markup = InlineKeyboardMarkup([[InlineKeyboardButton('↗️ Join Channel', url=CHANNEL_LINK)],
                                          [InlineKeyboardButton('↗️ Join Community', url=COMMUNITY_LINK)]])
 
-    await update.message.reply_text("Assalomu alaykum, {}!".format(user.first_name))
+    await update.message.reply_text("Welcome, {}!".format(user.first_name))
     await update.message.reply_text(
-        "Botga xush kelibsiz\n\nBotdan foydalanish uchun /menu bosing\n\n⬇️ Kanalimizga obuna bo'ling! ⬇️",
+        "Was-sap!\n\nClick /menu and start Browse\n\n⬇️ Stay in touch! ⬇️",
         reply_markup=reply_markup)
 
 
@@ -267,7 +273,7 @@ async def menu_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = ReplyKeyboardMarkup(buttons, resize_keyboard=True)
 
     await update.message.reply_text(
-        "Quyidagi ko'rsatilgan menyudan o'zingizga kerakli bo'limni tanlang\n\nTo\'liq ma\'lumot olish uchun /doc bosing\n\nReklama /ads, Botlar /bots",
+        "Choose an option\n\nClick /doc to learn more\n\nAds /ads, Useful Bots /bots",
         reply_markup=reply_markup)
 
     return MAIN
@@ -285,12 +291,12 @@ async def instagram_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             KeyboardButton(text="🟣 Stories", ),
         ],
         [
-            KeyboardButton(text="🔙 Orqaga", ),
+            KeyboardButton(text="🔙 Back", ),
         ],
     ]
     reply_markup = ReplyKeyboardMarkup(buttons, resize_keyboard=True)
 
-    await update.message.reply_text("Quyidagi ko'rsatilgan menyudan o'zingizga kerakli bo'limni tanlang",
+    await update.message.reply_text("Choose an option",
                                     reply_markup=reply_markup)
 
     return INSTAGRAM
@@ -302,12 +308,12 @@ async def facebook_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             KeyboardButton(text="🔵 Video", ),
         ],
         [
-            KeyboardButton(text="🔙 Orqaga", ),
+            KeyboardButton(text="🔙 Back", ),
         ],
     ]
     reply_markup = ReplyKeyboardMarkup(buttons, resize_keyboard=True)
 
-    await update.message.reply_text("Quyidagi ko'rsatilgan menyudan o'zingizga kerakli bo'limni tanlang",
+    await update.message.reply_text("Choose an option",
                                     reply_markup=reply_markup)
 
     return FACEBOOK
@@ -319,12 +325,12 @@ async def youtube_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             KeyboardButton(text="🔴 Video", ),
         ],
         [
-            KeyboardButton(text="🔙 Orqaga", ),
+            KeyboardButton(text="🔙 Back", ),
         ],
     ]
     reply_markup = ReplyKeyboardMarkup(buttons, resize_keyboard=True)
 
-    await update.message.reply_text("Quyidagi ko'rsatilgan menyudan o'zingizga kerakli bo'limni tanlang",
+    await update.message.reply_text("Choose an option",
                                     reply_markup=reply_markup)
 
     return YOUTUBE
@@ -333,18 +339,18 @@ async def youtube_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def spotify_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     buttons = [
         [
-            KeyboardButton(text="🟢 Ovozli xabar", ),
+            KeyboardButton(text="🟢 Voice message", ),
         ],
         [
-            KeyboardButton(text="🟢 Nomi/Ijrochisi", ),
+            KeyboardButton(text="🟢 Song/Singer", ),
         ],
         [
-            KeyboardButton(text="🔙 Orqaga", ),
+            KeyboardButton(text="🔙 Back", ),
         ],
     ]
     reply_markup = ReplyKeyboardMarkup(buttons, resize_keyboard=True)
 
-    await update.message.reply_text("Quyidagi ko'rsatilgan menyudan o'zingizga kerakli bo'limni tanlang",
+    await update.message.reply_text("Choose an option",
                                     reply_markup=reply_markup)
 
     return SPOTIFY
@@ -356,78 +362,78 @@ async def tiktok_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             KeyboardButton(text="🟡 Video", ),
         ],
         [
-            KeyboardButton(text="🔙 Orqaga", ),
+            KeyboardButton(text="🔙 Back", ),
         ],
     ]
     reply_markup = ReplyKeyboardMarkup(buttons, resize_keyboard=True)
 
-    await update.message.reply_text("Quyidagi ko'rsatilgan menyudan o'zingizga kerakli bo'limni tanlang",
+    await update.message.reply_text("Choose an option",
                                     reply_markup=reply_markup)
 
     return TIKTOK
 
 
 async def instagram_post_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Instagram post linkini yuboring",
+    await update.message.reply_text("Send Instagram Post link",
                                     reply_markup=ReplyKeyboardMarkup([
-                                        ["🔙️ Orqaga"]],
+                                        ["🔙️ Back"]],
                                         resize_keyboard=True))
 
     return INSTAGRAM_POST
 
 
 async def instagram_reel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Instagram reel linkini yuboring",
+    await update.message.reply_text("Send Instagram Reel link",
                                     reply_markup=ReplyKeyboardMarkup([
-                                        ["🔙️ Orqaga"]],
+                                        ["🔙️ Back"]],
                                         resize_keyboard=True))
     return INSTAGRAM_REEL
 
 
 async def instagram_story_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Instagram story username/linkini yuboring",
+    await update.message.reply_text("Send Instagram Story link or username",
                                     reply_markup=ReplyKeyboardMarkup([
-                                        ["🔙️ Orqaga"]],
+                                        ["🔙️ Back"]],
                                         resize_keyboard=True))
     return INSTAGRAM_STORY
 
 
 async def facebook_reel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Facebook video linkini yuboring",
+    await update.message.reply_text("Send Facebook video link",
                                     reply_markup=ReplyKeyboardMarkup([
-                                        ["🔙️ Orqaga"]],
+                                        ["🔙️ Back"]],
                                         resize_keyboard=True))
     return FACEBOOK_REEL
 
 
 async def youtube_reel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Youtube linkini yuboring",
+    await update.message.reply_text("Send YouTube video link",
                                     reply_markup=ReplyKeyboardMarkup([
-                                        ["🔙️ Orqaga"]],
+                                        ["🔙️ Back"]],
                                         resize_keyboard=True))
     return YOUTUBE_REEL
 
 
 async def spotify_voice_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Ovozli xabar yuboring",
+    await update.message.reply_text("Send Voice message",
                                     reply_markup=ReplyKeyboardMarkup([
-                                        ["🔙️ Orqaga"]],
+                                        ["🔙️ Back"]],
                                         resize_keyboard=True))
     return SPOTIFY_MUSIC
 
 
 async def spotify_args_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Musiqa nomi yoki ijrochisi va maksimal natija yuboring\n\nMasalan: Yurak 5",
+    await update.message.reply_text("Send name of Song or Singer and limit\n\nExample: Sad 5",
                                     reply_markup=ReplyKeyboardMarkup([
-                                        ["🔙️ Orqaga"]],
+                                        ["🔙️ Back"]],
                                         resize_keyboard=True))
     return SPOTIFY_ARGS
 
 
 async def tiktok_reel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Tiktok video linkini yuboring",
+    await update.message.reply_text("Send TikTok video link",
                                     reply_markup=ReplyKeyboardMarkup([
-                                        ["🔙️ Orqaga"]],
+                                        ["🔙️ Back"]],
                                         resize_keyboard=True))
     return TIKTOK_REEL
 
@@ -440,7 +446,7 @@ async def instagram_post_link_handler(update: Update, context: ContextTypes.DEFA
     if link != '':
         await _post_query(user.id, link)
 
-        await update.message.reply_text(text='🔎 Izlanmoqda...')
+        await update.message.reply_text(text='🔎 Searching...')
         url = "https://instagram-story-downloader-media-downloader.p.rapidapi.com/index"
 
         querystring = {"url": link}
@@ -462,7 +468,7 @@ async def instagram_post_link_handler(update: Update, context: ContextTypes.DEFA
             print(e)
             await update.message.reply_photo(photo=result['media'], caption='\n@thesaver1_bot', write_timeout=100)
     else:
-        await update.message.reply_text(text='Linkingizni yuboring')
+        await update.message.reply_text(text='Send link again')
 
     return INSTAGRAM
 
@@ -475,7 +481,7 @@ async def instagram_reel_link_handler(update: Update, context: ContextTypes.DEFA
     if link != '':
         await _post_query(user.id, link)
 
-        await update.message.reply_text(text='🔎 Izlanmoqda...')
+        await update.message.reply_text(text='🔎 Searching...')
         url = "https://instagram-story-downloader-media-downloader.p.rapidapi.com/index"
 
         querystring = {"url": link}
@@ -501,9 +507,9 @@ async def instagram_reel_link_handler(update: Update, context: ContextTypes.DEFA
             os.remove(VIDEO_FILE_PATH)
         except Exception as e:
             print(e)
-            await update.message.reply_text(text='❌ Bu linkda hech narsa yo\'q')
+            await update.message.reply_text(text='❌ Link is not valid')
     else:
-        await update.message.reply_text(text='Linkingizni yuboring')
+        await update.message.reply_text(text='Send link again')
 
     return INSTAGRAM
 
@@ -516,7 +522,7 @@ async def instagram_story_link_handler(update: Update, context: ContextTypes.DEF
     if link != '':
         await _post_query(user.id, link)
 
-        await update.message.reply_text(text='🔎 Izlanmoqda...')
+        await update.message.reply_text(text='🔎 Searching...')
         url = "https://instagram-story-downloader-media-downloader.p.rapidapi.com/story/index"
 
         querystring = {"url": link}
@@ -557,7 +563,7 @@ async def instagram_story_link_handler(update: Update, context: ContextTypes.DEF
 
                 os.remove(VIDEO_FILE_PATH)
     else:
-        await update.message.reply_text(text='Linkingizni yuboring')
+        await update.message.reply_text(text='Send link again')
 
     return INSTAGRAM
 
@@ -570,7 +576,7 @@ async def facebook_reel_link_handler(update: Update, context: ContextTypes.DEFAU
     if link != '':
         await _post_query(user.id, link)
 
-        await update.message.reply_text(text='🔎 Izlanmoqda...')
+        await update.message.reply_text(text='🔎 Searching...')
         url = "https://facebook-reel-and-video-downloader.p.rapidapi.com/app/main.php"
 
         querystring = {"url": link}
@@ -597,9 +603,9 @@ async def facebook_reel_link_handler(update: Update, context: ContextTypes.DEFAU
             os.remove(VIDEO_FILE_PATH)
         except Exception as e:
             print(e)
-            await update.message.reply_text(text='❌ Bu linkda hech narsa yo\'q')
+            await update.message.reply_text(text='❌ Link is not valid')
     else:
-        await update.message.reply_text(text='Linkingizni yuboring')
+        await update.message.reply_text(text='Send link again')
 
     return FACEBOOK
 
@@ -610,7 +616,7 @@ async def youtube_reel_link_handler(update: Update, context: ContextTypes.DEFAUL
 
     await _post_query(user.id, link)
 
-    await update.message.reply_text(text='❌ Xatolik yuz berdi!')
+    await update.message.reply_text(text='❌ An error has occurred')
 
     return YOUTUBE
 
@@ -623,7 +629,7 @@ async def spotify_voice_msg_handler(update: Update, context: ContextTypes.DEFAUL
     file_path = args['file_path']
     response = requests.get(file_path, allow_redirects=True)
 
-    await update.message.reply_text(text='🔎 Izlanmoqda...')
+    await update.message.reply_text(text='🔎 Searching...')
 
     open(AUDIO_FILE_PATH, 'wb').write(response.content)
 
@@ -647,7 +653,7 @@ async def spotify_voice_msg_handler(update: Update, context: ContextTypes.DEFAUL
 
         os.remove(FILE_PATH)
     else:
-        txt = '❌ Topa olmadik!'
+        txt = '❌ Nothing to show!'
         await update.message.reply_text(text=txt)
 
         os.remove(AUDIO_FILE_PATH)
@@ -668,7 +674,7 @@ async def spotify_args_msg_handler(update: Update, context: ContextTypes.DEFAULT
         await _post_query(user.id, args)
         # array = ""
 
-        await update.message.reply_text(text='🔎 Qidirilmoqda...')
+        await update.message.reply_text(text='🔎 Searching...')
         url = "http://38.242.138.39/search_track/"
 
         response = requests.request("POST", url, headers={'accept': 'application/json'}, json={'query': query, 'limit': limit})
@@ -691,9 +697,9 @@ async def spotify_args_msg_handler(update: Update, context: ContextTypes.DEFAULT
                 await update.message.reply_text(text=txt + '\n@thesaver1_bot', write_timeout=100, parse_mode=ParseMode.HTML,)
             except Exception as e:
                 print(e)
-                await update.message.reply_text(text="❌ Xatolik yuz berdi, Iltimos qayta urinib ko'ring")
+                await update.message.reply_text(text="❌ An error has occurred!", write_timeout=100,)
     else:
-        await update.message.reply_text(text='Musiqa nomi yoki ijrochisini va maksimal natijani yuboring\n\nMasalan: Yurak 5')
+        await update.message.reply_text(text='Send name of Song or Singer and limit\n\nExample: Sad 5')
 
     return SPOTIFY
 
@@ -706,7 +712,7 @@ async def tiktok_reel_link_handler(update: Update, context: ContextTypes.DEFAULT
     if link != '':
         await _post_query(user.id, link)
 
-        await update.message.reply_text(text='🔎 Izlanmoqda...')
+        await update.message.reply_text(text='🔎 Searching...')
         url = "https://tiktok-video-no-watermark2.p.rapidapi.com/"
 
         querystring = {"url": link, 'hd': '0'}
@@ -734,16 +740,16 @@ async def tiktok_reel_link_handler(update: Update, context: ContextTypes.DEFAULT
             os.remove(VIDEO_FILE_PATH)
         except Exception as e:
             print(e)
-            await update.message.reply_text(text='❌ Bu linkda hech narsa yo\'q')
+            await update.message.reply_text(text='❌ Link is not valid')
     else:
-        await update.message.reply_text(text='Linkingizni yuboring')
+        await update.message.reply_text(text='Send link again')
 
     return TIKTOK
 
 
 async def cancel_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("Bekor qilindi")
-    await update.message.reply_text("Qaytadan boshlash uchun\n/start ni bosing", reply_markup=ReplyKeyboardRemove())
+    await update.message.reply_text("Canceled")
+    await update.message.reply_text("Click /start to start again", reply_markup=ReplyKeyboardRemove())
     return ConversationHandler.END
 
 
@@ -787,55 +793,55 @@ if __name__ == "__main__":
                 MessageHandler(filters.Regex(".*Post$"), instagram_post_handler),
                 MessageHandler(filters.Regex(".*Reel$"), instagram_reel_handler),
                 MessageHandler(filters.Regex(".*Stories$"), instagram_story_handler),
-                MessageHandler(filters.Regex(".*Orqaga$"), menu_handler),
+                MessageHandler(filters.Regex(".*Back$"), menu_handler),
             ],
             FACEBOOK: [
                 MessageHandler(filters.Regex(".*Video$"), facebook_reel_handler),
-                MessageHandler(filters.Regex(".*Orqaga$"), menu_handler),
+                MessageHandler(filters.Regex(".*Back$"), menu_handler),
             ],
             YOUTUBE: [
                 MessageHandler(filters.Regex(".*Video$"), youtube_reel_handler),
-                MessageHandler(filters.Regex(".*Orqaga$"), menu_handler),
+                MessageHandler(filters.Regex(".*Back$"), menu_handler),
             ],
             SPOTIFY: [
-                MessageHandler(filters.Regex(".*Ovozli xabar$"), spotify_voice_handler),
-                MessageHandler(filters.Regex(".*Nomi/Ijrochisi$"), spotify_args_handler),
-                MessageHandler(filters.Regex(".*Orqaga$"), menu_handler),
+                MessageHandler(filters.Regex(".*Voice message$"), spotify_voice_handler),
+                MessageHandler(filters.Regex(".*Song/Singer$"), spotify_args_handler),
+                MessageHandler(filters.Regex(".*Back$"), menu_handler),
             ],
             TIKTOK: [
                 MessageHandler(filters.Regex(".*Video$"), tiktok_reel_handler),
-                MessageHandler(filters.Regex(".*Orqaga$"), menu_handler),
+                MessageHandler(filters.Regex(".*Back$"), menu_handler),
             ],
             INSTAGRAM_POST: [
-                MessageHandler(filters.Regex(".*Orqaga$"), instagram_handler),
+                MessageHandler(filters.Regex(".*Back$"), instagram_handler),
                 MessageHandler(filters.TEXT & (~filters.COMMAND), instagram_post_link_handler)
             ],
             INSTAGRAM_REEL: [
-                MessageHandler(filters.Regex(".*Orqaga$"), instagram_handler),
+                MessageHandler(filters.Regex(".*Back$"), instagram_handler),
                 MessageHandler(filters.TEXT & (~filters.COMMAND), instagram_reel_link_handler)
             ],
             INSTAGRAM_STORY: [
-                MessageHandler(filters.Regex(".*Orqaga$"), instagram_handler),
+                MessageHandler(filters.Regex(".*Back$"), instagram_handler),
                 MessageHandler(filters.TEXT & (~filters.COMMAND), instagram_story_link_handler)
             ],
             FACEBOOK_REEL: [
-                MessageHandler(filters.Regex(".*Orqaga$"), facebook_handler),
+                MessageHandler(filters.Regex(".*Back$"), facebook_handler),
                 MessageHandler(filters.TEXT & (~filters.COMMAND), facebook_reel_link_handler)
             ],
             YOUTUBE_REEL: [
-                MessageHandler(filters.Regex(".*Orqaga$"), youtube_handler),
+                MessageHandler(filters.Regex(".*Back$"), youtube_handler),
                 MessageHandler(filters.TEXT & (~filters.COMMAND), youtube_reel_link_handler)
             ],
             SPOTIFY_MUSIC: [
-                MessageHandler(filters.Regex(".*Orqaga$"),  spotify_handler),
+                MessageHandler(filters.Regex(".*Back$"),  spotify_handler),
                 MessageHandler(filters.VOICE & (~filters.COMMAND), spotify_voice_msg_handler)
             ],
             SPOTIFY_ARGS: [
-                MessageHandler(filters.Regex(".*Orqaga$"), spotify_handler),
+                MessageHandler(filters.Regex(".*Back$"), spotify_handler),
                 MessageHandler(filters.TEXT & (~filters.COMMAND), spotify_args_msg_handler)
             ],
             TIKTOK_REEL: [
-                MessageHandler(filters.Regex(".*Orqaga$"), tiktok_handler),
+                MessageHandler(filters.Regex(".*Back$"), tiktok_handler),
                 MessageHandler(filters.TEXT & (~filters.COMMAND), tiktok_reel_link_handler)
             ],
         },
